@@ -67,6 +67,7 @@ const barBot  = $('barBot');
 const uline   = $('uline').querySelector('.uline__path');
 const bloom   = $('bloom');
 const replay  = $('replay');
+const tapHint = $('tapHint');
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isRecord     = new URLSearchParams(location.search).has('record');
@@ -701,6 +702,35 @@ function shotGeom(){
   };
 }
 
+/* --- the hold on the wish ---------------------------------------------------
+   Every line of the wish has landed by 3.19s and the bloom used to start at
+   3.32 — a 0.13s beat, so the wish was swept away before it could be read. The
+   film now stops there and waits for a tap. */
+let wishReleased = false;
+
+function armWishTap(){
+  tapHint.classList.add('is-on');
+
+  const release = () => {
+    window.removeEventListener('pointerdown', release);
+    window.removeEventListener('keydown', onKey);
+    tapHint.classList.remove('is-on');
+    wishReleased = true;
+    cue('release-wish');
+    if (filmTL) filmTL.play();
+  };
+  const onKey = (e) => {
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); release(); }
+  };
+
+  // the recorder has nobody to tap: hold a fixed beat instead, so the captured
+  // film keeps a deliberate pause rather than hanging forever.
+  if (isRecord){ gsap.delayedCall(2.0, release); return; }
+
+  window.addEventListener('pointerdown', release);
+  window.addEventListener('keydown', onKey);
+}
+
 let filmTL = null;
 function buildFilm(m){
   const t = gsap.timeline({
@@ -786,6 +816,15 @@ function buildFilm(m){
    .to(line2Chars, { yPercent: 0, rotationX: 0, duration: 0.55, ease: 'power3.out', stagger: 0.033 }, 2.06)
    .to(uline, { drawn: 1, duration: 0.45, ease: 'power2.inOut' }, 2.54)
    .to(kSub, { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out' }, 2.74);
+
+  // --- the hold: everything below waits for the visitor's tap ----------------
+  // Guarded rather than a bare addPause: resize() rebuilds this timeline and
+  // re-seeks it, and the flag keeps a rebuilt film from stopping here twice.
+  t.call(() => {
+    if (wishReleased) return;
+    t.pause();
+    armWishTap();
+  }, null, 3.20);
 
   // --- the handoff bloom -----------------------------------------------------
   t.to(barTop, { yPercent: -100, duration: 0.5, ease: 'power2.in' }, 3.32)
@@ -884,6 +923,8 @@ function resetAll(){
   gsap.set([flood, bloom], { autoAlpha: 0 });
   gsap.set(field, { autoAlpha: 0 });
   gsap.set(arrow, { opacity: 1, scaleY: 1 });
+  // arm the hold again, or a replay would run straight past the wish
+  wishReleased = false; tapHint.classList.remove('is-on');
   played = false;
   enter();
 }

@@ -314,6 +314,23 @@ body{
 .bar--top{ top:0; }
 .bar--bot{ bottom:0; }
 
+/* « clique pour continuer » — le film tient le vœu à l'écran et attend un clic.
+   Placé juste au-dessus de la barre basse (16vh) pour rester dans le cadre.
+   pointer-events:none : c'est window qui écoute le clic, pas cet élément. */
+.tapHint{
+  position:absolute; left:0; right:0; bottom:19vh;
+  text-align:center;
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-style:italic; font-weight:500;
+  font-size:clamp(11px, 2.7vw, 16px);
+  letter-spacing:.2em; text-transform:uppercase;
+  color:#ffe0d2;
+  text-shadow:0 1px 12px rgba(90,6,34,.6);
+  opacity:0; z-index:4; pointer-events:none;
+}
+.tapHint.is-on{ animation:tapPulse 1.9s ease-in-out infinite; }
+@keyframes tapPulse{ 0%,100%{ opacity:.34; } 50%{ opacity:1; } }
+
 /* ============================================================
    THE HANDOFF BLOOM (rose wish → dawn of the tree)
    ============================================================ */

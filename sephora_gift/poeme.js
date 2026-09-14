@@ -194,6 +194,9 @@
   heartBtn.addEventListener('click', () => {
     const r = heartBtn.getBoundingClientRect();
     spawnBurst(24, r.left + r.width / 2, r.top + r.height / 2, 'point');
+    // filet de sécurité : quoi qu'il se soit passé avant, la question s'ouvre
+    // toujours avec « Non » sagement à côté de « Oui »
+    resetNoBtn();
     goToStage('stage-question');
   });
 
@@ -207,6 +210,21 @@
   const MARGIN = 16;
   const FLEE_RADIUS = 110;
   let lastFleeAt = 0;
+
+  const questionStage = document.getElementById('stage-question');
+  /* Les stages inactifs gardent leur boîte (position:absolute; inset:0) : le
+     bouton « Non » a donc de vraies coordonnées dès l'ACTE 1. Comme le listener
+     pointermove vit sur window, la souris qui passe par là pendant le poème le
+     ferait fuir en position:fixed — il serait déjà ailleurs au moment où la
+     question s'affiche, au lieu d'être à côté de « Oui ». */
+  const isQuestionLive = () => questionStage.classList.contains('is-active');
+
+  /* remet le bouton dans le flux, à sa place à côté de « Oui » */
+  function resetNoBtn(){
+    noBtn.classList.remove('is-fleeing');
+    noBtn.style.left = '';
+    noBtn.style.top = '';
+  }
 
   function placeButtonAt(x, y){
     const w = noBtn.offsetWidth || 100;
@@ -242,6 +260,7 @@
   /* fuite anticipée au survol / approche du curseur (desktop) */
   window.addEventListener('pointermove', (e) => {
     if (e.pointerType === 'touch') return;
+    if (!isQuestionLive()) return;        // la carte n'est pas encore à l'écran
     const r = noBtn.getBoundingClientRect();
     const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
     const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
@@ -254,6 +273,7 @@
 
   /* sur mobile : dès qu'on touche le bouton, il se déplace avant le tap */
   noBtn.addEventListener('touchstart', (e) => {
+    if (!isQuestionLive()) return;
     e.preventDefault();
     const t = e.touches[0];
     lastFleeAt = performance.now();
@@ -263,6 +283,7 @@
   /* filet de sécurité : si un clic aboutit malgré tout, il fuit encore
      et ne déclenche jamais l'action "Non" */
   noBtn.addEventListener('click', (e) => {
+    if (!isQuestionLive()) return;
     e.preventDefault();
     lastFleeAt = performance.now();
     flee(e.clientX, e.clientY);
@@ -270,6 +291,7 @@
 
   noBtn.addEventListener('pointerenter', (e) => {
     if (e.pointerType === 'touch') return;
+    if (!isQuestionLive()) return;
     flee(e.clientX, e.clientY);
   });
 
