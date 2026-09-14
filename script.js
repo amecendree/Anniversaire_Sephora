@@ -194,6 +194,7 @@
   heartBtn.addEventListener('click', () => {
     const r = heartBtn.getBoundingClientRect();
     spawnBurst(24, r.left + r.width / 2, r.top + r.height / 2, 'point');
+    resetNoBtn();
     goToStage('stage-question');
   });
 
@@ -207,12 +208,40 @@
   const MARGIN = 16;
   const FLEE_RADIUS = 110;
   let lastFleeAt = 0;
+  const questionStage = document.getElementById('stage-question');
+  const isQuestionLive = () => questionStage.classList.contains('is-active');
+
+  function resetNoBtn(){
+    noBtn.classList.remove('is-fleeing');
+    noBtn.style.left = '';
+    noBtn.style.top = '';
+  }
+
+  function viewportBounds(){
+    const vv = window.visualViewport;
+    const left = vv ? vv.offsetLeft : 0;
+    const top = vv ? vv.offsetTop : 0;
+    const width = vv ? vv.width : window.innerWidth;
+    const height = vv ? vv.height : window.innerHeight;
+
+    return {
+      minX: left + MARGIN,
+      minY: top + MARGIN,
+      maxX: left + width - MARGIN,
+      maxY: top + height - MARGIN,
+    };
+  }
 
   function placeButtonAt(x, y){
     const w = noBtn.offsetWidth || 100;
     const h = noBtn.offsetHeight || 44;
-    const cx = clamp(x - w / 2, MARGIN, window.innerWidth - w - MARGIN);
-    const cy = clamp(y - h / 2, MARGIN, window.innerHeight - h - MARGIN);
+    const bounds = viewportBounds();
+    const minLeft = bounds.minX;
+    const minTop = bounds.minY;
+    const maxLeft = Math.max(minLeft, bounds.maxX - w);
+    const maxTop = Math.max(minTop, bounds.maxY - h);
+    const cx = clamp(x - w / 2, minLeft, maxLeft);
+    const cy = clamp(y - h / 2, minTop, maxTop);
     noBtn.style.left = cx + 'px';
     noBtn.style.top = cy + 'px';
   }
@@ -226,10 +255,15 @@
     }
     const w = noBtn.offsetWidth || 100;
     const h = noBtn.offsetHeight || 44;
+    const bounds = viewportBounds();
+    const minCenterX = bounds.minX + w / 2;
+    const minCenterY = bounds.minY + h / 2;
+    const maxCenterX = Math.max(minCenterX, bounds.maxX - w / 2);
+    const maxCenterY = Math.max(minCenterY, bounds.maxY - h / 2);
     let nx, ny, tries = 0;
     do {
-      nx = rand(MARGIN, window.innerWidth - w - MARGIN) + w / 2;
-      ny = rand(MARGIN, window.innerHeight - h - MARGIN) + h / 2;
+      nx = rand(minCenterX, maxCenterX);
+      ny = rand(minCenterY, maxCenterY);
       tries++;
     } while (
       fromX !== undefined &&
@@ -242,6 +276,7 @@
   /* fuite anticipée au survol / approche du curseur (desktop) */
   window.addEventListener('pointermove', (e) => {
     if (e.pointerType === 'touch') return;
+    if (!isQuestionLive()) return;
     const r = noBtn.getBoundingClientRect();
     const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
     const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
@@ -254,6 +289,7 @@
 
   /* sur mobile : dès qu'on touche le bouton, il se déplace avant le tap */
   noBtn.addEventListener('touchstart', (e) => {
+    if (!isQuestionLive()) return;
     e.preventDefault();
     const t = e.touches[0];
     lastFleeAt = performance.now();
@@ -263,6 +299,7 @@
   /* filet de sécurité : si un clic aboutit malgré tout, il fuit encore
      et ne déclenche jamais l'action "Non" */
   noBtn.addEventListener('click', (e) => {
+    if (!isQuestionLive()) return;
     e.preventDefault();
     lastFleeAt = performance.now();
     flee(e.clientX, e.clientY);
@@ -270,6 +307,7 @@
 
   noBtn.addEventListener('pointerenter', (e) => {
     if (e.pointerType === 'touch') return;
+    if (!isQuestionLive()) return;
     flee(e.clientX, e.clientY);
   });
 
