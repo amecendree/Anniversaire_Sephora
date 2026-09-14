@@ -482,6 +482,12 @@ body{
 @keyframes hlpulse{ 0%,100%{ opacity:.72; } 50%{ opacity:1; } }
 @keyframes twk{ 0%,100%{ opacity:0; transform:scale(.5) rotate(-12deg); } 45%{ opacity:1; transform:scale(1.05) rotate(16deg); } }
 
+@media (max-width:600px){
+  .bar{ display:none; }
+  .camera{ padding-inline:4vw; }
+  .hl__word{ font-size:clamp(42px, 13vw, 72px); white-space:nowrap; }
+}
+
 /* ============================================================
    REPLAY
    ============================================================ */
