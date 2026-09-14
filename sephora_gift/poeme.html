@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Pour Sephora ❤</title>
+<meta name="theme-color" content="#2a0a1c" />
+
+<!--
+  Seconde page du projet. On y arrive en cliquant sur le titre
+  « Joyeux Anniversaire, Sephora » à la fin du film (index.html).
+
+  DÉPENDANCES :
+  - Google Fonts (Playfair Display + Cormorant Garamond) chargées via CDN ci-dessous.
+  - Aucune autre bibliothèque externe : particules, confettis et cœurs sont
+    générés en Canvas / JS natif dans poeme.js.
+  Fichiers de la page : poeme.html, poeme.css, poeme.js
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet" />
+
+<link rel="icon" type="image/png" href="/favicon.png" />
+<link rel="stylesheet" href="./poeme.css" />
+</head>
+<body>
+
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+<main class="stages">
+
+  <!-- STAGE 1 — Poème en acrostiche -->
+  <section class="stage is-active" id="stage-poem">
+    <div class="poem">
+      <p class="poem__eyebrow">pour toi,</p>
+      <h1 class="poem__name">Sephora</h1>
+
+      <!-- Lettrine : la lettre dorée EST la première lettre du mot. Elle est
+           aria-hidden et l'initiale est répétée en .sr-only dans le vers, sinon
+           un lecteur d'écran annoncerait « S » puis « i la beauté… », coupé en
+           plein mot. Ainsi il lit bien « Si la beauté… ». -->
+      <div class="verses" id="verses">
+        <div class="verse" data-letter="S">
+          <span class="verse__letter" aria-hidden="true">S</span>
+          <p class="verse__text"><span class="sr-only">S</span>i la beauté avait un prénom, je crois qu’elle porterait le tien,</p>
+        </div>
+        <div class="verse" data-letter="E">
+          <span class="verse__letter" aria-hidden="true">E</span>
+          <p class="verse__text"><span class="sr-only">E</span>légante sans effort, tu as ce charme qu’on remarque sans même le chercher,</p>
+        </div>
+        <div class="verse" data-letter="P">
+          <span class="verse__letter" aria-hidden="true">P</span>
+          <p class="verse__text"><span class="sr-only">P</span>armi tant de visages, le tien a quelque chose qu’on n’oublie pas,</p>
+        </div>
+        <div class="verse" data-letter="H">
+          <span class="verse__letter" aria-hidden="true">H</span>
+          <p class="verse__text"><span class="sr-only">H</span>ypnotisant est ton regard, surtout lorsqu’il accompagne ton sourire,</p>
+        </div>
+        <div class="verse" data-letter="O">
+          <span class="verse__letter" aria-hidden="true">O</span>
+          <p class="verse__text"><span class="sr-only">O</span>n pourrait parler de ta beauté, mais elle mérite bien plus que quelques mots,</p>
+        </div>
+        <div class="verse" data-letter="R">
+          <span class="verse__letter" aria-hidden="true">R</span>
+          <p class="verse__text"><span class="sr-only">R</span>are est le charme qui peut rendre un simple instant aussi précieux,</p>
+        </div>
+        <div class="verse" data-letter="A">
+          <span class="verse__letter" aria-hidden="true">A</span>
+          <p class="verse__text"><span class="sr-only">A</span>lors, en ce jour qui t’appartient, je te souhaite un anniversaire aussi magnifique que toi. ❤️✨</p>
+        </div>
+      </div>
+
+      <button class="heart-btn" id="heartBtn" type="button" aria-label="Ouvrir le cœur">
+        <svg viewBox="0 0 100 92" class="heart-btn__svg" aria-hidden="true">
+          <defs>
+            <radialGradient id="hg" cx="38%" cy="30%" r="80%">
+              <stop offset="0%"  stop-color="#ffe3d0" />
+              <stop offset="42%" stop-color="#ff7fa3" />
+              <stop offset="82%" stop-color="#d4235c" />
+              <stop offset="100%" stop-color="#7a0f37" />
+            </radialGradient>
+          </defs>
+          <path d="M50 86.5C26 68 10.5 53.6 10.5 34.6 10.5 20.4 21 11 33.2 11c8.6 0 14.2 4.7 16.8 11.4C52.6 15.7 58.2 11 66.8 11 79 11 89.5 20.4 89.5 34.6 89.5 53.6 74 68 50 86.5Z" fill="url(#hg)" />
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- STAGE 2 — La question -->
+  <section class="stage" id="stage-question">
+    <div class="card">
+      <span class="card__rule" aria-hidden="true"></span>
+      <p class="card__question">Veux-tu m'ajouter à ta liste des personnes très spéciales&nbsp;? ❤️</p>
+      <div class="card__actions">
+        <button class="btn btn--yes" id="yesBtn" type="button">Oui ❤️</button>
+        <button class="btn btn--no" id="noBtn" type="button">Non</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGE 3 — Célébration -->
+  <section class="stage" id="stage-celebration">
+    <div class="finale">
+      <span class="finale__rule" aria-hidden="true"></span>
+      <p class="finale__line">Merci ❤️</p>
+      <p class="finale__line">Je savais que tu dirais Oui !</p>
+      <p class="finale__line">J'espère que tes meilleurs vœux se réaliseront. ✨</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- retour vers le film -->
+<a class="back" href="./index.html">&larr;&nbsp; Revoir le film</a>
+
+<script type="module" src="./poeme.js"></script>
+</body>
+</html>

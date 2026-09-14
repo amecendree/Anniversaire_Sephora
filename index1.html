@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Pour Sephora ❤</title>
+<meta name="theme-color" content="#2a0a1c" />
+
+<!--
+  DÉPENDANCES :
+  - Google Fonts (Playfair Display + Cormorant Garamond) chargées via CDN ci-dessous.
+  - Aucune autre bibliothèque externe requise (particules, confettis et cœurs
+    sont générés en Canvas / JS natif dans script.js).
+  Fichiers du projet : index.html, style.css, script.js
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+<main class="stages">
+
+  <!-- STAGE 1 — Poème en acrostiche -->
+  <section class="stage is-active" id="stage-poem">
+    <div class="poem">
+      <p class="poem__eyebrow">pour toi,</p>
+      <h1 class="poem__name">Sephora</h1>
+
+      <div class="verses" id="verses">
+        <div class="verse" data-letter="S">
+          <span class="verse__letter">S</span>
+          <p class="verse__text">Sourire qui éclaire mes journées les plus grises,</p>
+        </div>
+        <div class="verse" data-letter="E">
+          <span class="verse__letter">E</span>
+          <p class="verse__text">Élégance naturelle que rien n'imite,</p>
+        </div>
+        <div class="verse" data-letter="P">
+          <span class="verse__letter">P</span>
+          <p class="verse__text">Présence douce qui rend chaque instant précieux,</p>
+        </div>
+        <div class="verse" data-letter="H">
+          <span class="verse__letter">H</span>
+          <p class="verse__text">Harmonie parfaite entre grâce et malice,</p>
+        </div>
+        <div class="verse" data-letter="O">
+          <span class="verse__letter">O</span>
+          <p class="verse__text">Or discret d'un regard qui réchauffe un cœur,</p>
+        </div>
+        <div class="verse" data-letter="R">
+          <span class="verse__letter">R</span>
+          <p class="verse__text">Rire cristallin, la plus belle des mélodies,</p>
+        </div>
+        <div class="verse" data-letter="A">
+          <span class="verse__letter">A</span>
+          <p class="verse__text">Amour sincère que je célèbre aujourd'hui.</p>
+        </div>
+      </div>
+
+      <button class="heart-btn" id="heartBtn" type="button" aria-label="Ouvrir le cœur">
+        <svg viewBox="0 0 100 92" class="heart-btn__svg" aria-hidden="true">
+          <defs>
+            <radialGradient id="hg" cx="38%" cy="30%" r="80%">
+              <stop offset="0%"  stop-color="#ffe3d0" />
+              <stop offset="42%" stop-color="#ff7fa3" />
+              <stop offset="82%" stop-color="#d4235c" />
+              <stop offset="100%" stop-color="#7a0f37" />
+            </radialGradient>
+          </defs>
+          <path d="M50 86.5C26 68 10.5 53.6 10.5 34.6 10.5 20.4 21 11 33.2 11c8.6 0 14.2 4.7 16.8 11.4C52.6 15.7 58.2 11 66.8 11 79 11 89.5 20.4 89.5 34.6 89.5 53.6 74 68 50 86.5Z" fill="url(#hg)" />
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- STAGE 2 — La question -->
+  <section class="stage" id="stage-question">
+    <div class="card">
+      <span class="card__rule" aria-hidden="true"></span>
+      <p class="card__question">Veux-tu m'ajouter à ta liste des personnes très spéciales&nbsp;? ❤️</p>
+      <div class="card__actions">
+        <button class="btn btn--yes" id="yesBtn" type="button">Oui ❤️</button>
+        <button class="btn btn--no" id="noBtn" type="button">Non</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGE 3 — Célébration -->
+  <section class="stage" id="stage-celebration">
+    <div class="finale">
+      <span class="finale__rule" aria-hidden="true"></span>
+      <p class="finale__line">Merci ❤️</p>
+      <p class="finale__line">Je savais que tu dirais Oui !</p>
+      <p class="finale__line">J'espère que tes meilleurs vœux se réaliseront. ✨</p>
+    </div>
+  </section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

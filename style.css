@@ -1,0 +1,321 @@
+/* ============================================================
+   POUR SEPHORA — vœux romantiques interactifs
+   ============================================================ */
+
+:root{
+  --bg-0: #1b0410;
+  --bg-1: #2a0a1c;
+  --bg-2: #3c0f28;
+
+  --cream: #fbe9ee;
+  --gold: #f0c987;
+  --gold-soft: #f7dca8;
+  --rose: #ff7fa3;
+  --rose-deep: #d4235c;
+  --wine: #7a0f37;
+
+  --line: rgba(240,201,135,.4);
+  --card-bg: rgba(255,244,235,.05);
+  --card-border: rgba(240,201,135,.28);
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Cormorant Garamond', Georgia, serif;
+
+  --ease: cubic-bezier(.22,.75,.25,1);
+}
+
+*{ box-sizing: border-box; margin:0; padding:0; }
+html, body{ height:100%; }
+
+body{
+  min-height:100svh;
+  background:
+    radial-gradient(120% 90% at 50% -10%, var(--bg-2) 0%, var(--bg-1) 55%, var(--bg-0) 100%);
+  color: var(--cream);
+  font-family: var(--font-body);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+#bg-canvas{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:0;
+  display:block;
+}
+
+/* ============================================================
+   STAGES — poème / question / célébration
+   ============================================================ */
+.stages{
+  position:relative;
+  z-index:1;
+  width:100%;
+  height:100svh;
+}
+
+.stage{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 6vh 1.5rem;
+  opacity:0;
+  pointer-events:none;
+  transition: opacity 1s var(--ease);
+}
+
+.stage.is-active{
+  opacity:1;
+  pointer-events:auto;
+}
+
+/* ============================================================
+   ACTE 1 — LE POÈME
+   ============================================================ */
+.poem{
+  width:100%;
+  max-width: 34rem;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.poem__eyebrow{
+  font-family: var(--font-body);
+  font-style:italic;
+  font-size: 1.05rem;
+  color: var(--gold-soft);
+  letter-spacing:.02em;
+  opacity:.85;
+  margin-bottom:.15rem;
+}
+
+.poem__name{
+  font-family: var(--font-display);
+  font-style:italic;
+  font-weight:700;
+  font-size: clamp(2.6rem, 9vw, 4rem);
+  line-height:1;
+  background: linear-gradient(180deg, var(--gold-soft), var(--gold) 55%, var(--rose) 120%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  margin-bottom: 1.6rem;
+  filter: drop-shadow(0 2px 18px rgba(240,201,135,.25));
+}
+
+.verses{
+  display:flex;
+  flex-direction:column;
+  gap: .85rem;
+  width:100%;
+  margin-bottom: 2.1rem;
+}
+
+.verse{
+  display:flex;
+  align-items:baseline;
+  gap: .85rem;
+  text-align:left;
+  opacity:0;
+  transform: translateY(16px);
+  transition: opacity .9s var(--ease), transform .9s var(--ease);
+}
+
+.verse.is-visible{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.verse__letter{
+  flex:none;
+  font-family: var(--font-display);
+  font-style:italic;
+  font-weight:700;
+  font-size: 1.7rem;
+  color: var(--gold);
+  width: 1.3em;
+  text-align:center;
+}
+
+.verse__text{
+  font-size: clamp(1.05rem, 2.6vw, 1.28rem);
+  line-height:1.4;
+  color: var(--cream);
+  opacity:.92;
+}
+
+.heart-btn{
+  appearance:none;
+  border:none;
+  background:none;
+  cursor:pointer;
+  width: clamp(72px, 16vw, 96px);
+  aspect-ratio:1;
+  opacity:0;
+  transform: scale(.8);
+  transition: opacity 1s var(--ease), transform 1s var(--ease);
+  filter: drop-shadow(0 0 22px rgba(255,127,163,.45));
+}
+
+.heart-btn.is-visible{
+  opacity:1;
+  transform:scale(1);
+  animation: heartbeat 2.4s ease-in-out 1s infinite;
+}
+
+.heart-btn:focus-visible{
+  outline: 2px solid var(--gold);
+  outline-offset: 6px;
+  border-radius:50%;
+}
+
+.heart-btn__svg{ width:100%; height:100%; display:block; }
+
+@keyframes heartbeat{
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.08); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.05); }
+}
+
+/* ============================================================
+   ACTE 2 — LA QUESTION
+   ============================================================ */
+.card{
+  position:relative;
+  width:100%;
+  max-width: 28rem;
+  text-align:center;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 22px;
+  padding: 3rem 2rem 2.6rem;
+  backdrop-filter: blur(6px);
+}
+
+.card__rule{
+  display:block;
+  width: 54px;
+  height:2px;
+  margin: 0 auto 1.4rem;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.card__question{
+  font-family: var(--font-display);
+  font-style:italic;
+  font-weight:600;
+  font-size: clamp(1.35rem, 4vw, 1.7rem);
+  line-height:1.45;
+  color: var(--cream);
+  margin-bottom: 2.4rem;
+}
+
+.card__actions{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap: 1.1rem;
+  flex-wrap:wrap;
+  min-height: 60px;
+}
+
+.btn{
+  appearance:none;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-weight:600;
+  font-size: 1.08rem;
+  padding: .75rem 1.9rem;
+  cursor:pointer;
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+}
+
+.btn:focus-visible{
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.btn--yes{
+  border: none;
+  color: #3a0a1c;
+  background: linear-gradient(135deg, var(--gold-soft), var(--rose) 85%);
+  box-shadow: 0 10px 26px rgba(212,35,92,.35);
+}
+
+.btn--yes:hover{ transform: translateY(-2px) scale(1.03); }
+
+.btn--no{
+  border: 1px solid var(--card-border);
+  background: transparent;
+  color: var(--cream);
+  opacity:.85;
+}
+
+.btn--no.is-fleeing{
+  position: fixed;
+  z-index: 20;
+  transition: left .28s var(--ease), top .28s var(--ease), transform .2s ease;
+}
+
+/* ============================================================
+   ACTE 3 — LA CÉLÉBRATION
+   ============================================================ */
+.finale{
+  text-align:center;
+  max-width: 30rem;
+}
+
+.finale__rule{
+  display:block;
+  width: 70px;
+  height:2px;
+  margin: 0 auto 1.6rem;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.finale__line{
+  font-family: var(--font-display);
+  font-style:italic;
+  font-weight:600;
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  line-height:1.5;
+  color: var(--cream);
+  opacity:0;
+  transform: translateY(14px);
+  transition: opacity .9s var(--ease), transform .9s var(--ease);
+}
+
+.finale__line.is-visible{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.finale__line:first-child{
+  color: var(--gold);
+  font-size: clamp(1.7rem, 6vw, 2.4rem);
+  margin-bottom: .6rem;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 420px){
+  .verse{ gap:.6rem; }
+  .card{ padding: 2.4rem 1.4rem 2.1rem; }
+}
+
+/* ============================================================
+   ACCESSIBILITÉ — mouvement réduit
+   ============================================================ */
+@media (prefers-reduced-motion: reduce){
+  .verse, .heart-btn, .finale__line{ transition-duration:.01ms !important; }
+  .heart-btn.is-visible{ animation:none; }
+}
